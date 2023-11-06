@@ -33,6 +33,7 @@ let state = {
 //References
 let eventList = document.getElementById("event-list")
 let addEventForm = document.querySelector("form");
+addEventForm.addEventListener("submit", addEvent);
 
 
 //Listeners
@@ -71,13 +72,14 @@ async function renderEvents(){
 
 async function addEvent(ev){
     ev.preventDefault();
+    console.log(addEventForm.date.value)
     try {
         let response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 name: addEventForm.name.value,
-                date: addEventForm.date.value,
+                date: "2024-11-23T18:25:43.511Z",
                 location: addEventForm.location.value,
                 description: addEventForm.description.value,
                 cohortId: 16
@@ -85,7 +87,7 @@ async function addEvent(ev){
             
         });
         console.log(response.status, response.statusText)
-        await renderEvents();
+        renderEvents();
     } catch (err){
         alert(err.message);
     }
@@ -94,7 +96,7 @@ async function addEvent(ev){
 
 renderEvents();
 
-addEventForm.addEventListener("submit", addEvent);
+
 
 
 
