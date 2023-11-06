@@ -30,6 +30,16 @@ let state = {
     events: [],
 }
 
+//References
+let eventList = document.getElementById("event-list")
+let addEventForm = document.querySelector("form");
+
+
+//Listeners
+//event listener for delete button
+//event listener for form submit
+// addEventForm.addEventListener("submit", addEvent);
+
 
 
 async function getEvents(){
@@ -43,25 +53,24 @@ async function getEvents(){
     }
 }
 
-getEvents();
 
 
-// async function renderEvents(){
 
-// }
-
-//References
-let eventList = document.getElementById("event-list")
-let addEventForm = document.querySelector("form");
-
-//Listeners
-//event listener for delete button
-//event listener for form submit
-addEventForm.addEventListener("submit", addEvent);
-
-function addEvent(){
-
+async function renderEvents(){
+    await getEvents();
+    for( evt of state.events) {
+        let li = document.createElement("li");
+        li.innerText = `${evt.name}, ${new Date(evt.date).toUTCString()}, ${evt.location}, ${evt.description}`;
+        eventList.appendChild(li);
+    }
 }
+
+renderEvents();
+
+
+// async function addEvent(){
+//     await renderEvents();
+// }
 
 
 
