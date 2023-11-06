@@ -2,3 +2,7 @@ input {
     padding: 5px;
     margin: 10px;
 }
+
+.delete-btn {
+    margin: 10px;
+}

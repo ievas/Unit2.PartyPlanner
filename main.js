@@ -33,16 +33,13 @@ let state = {
 //References
 let eventList = document.getElementById("event-list")
 let addEventForm = document.querySelector("form");
+
+
+//event listener for form submit
 addEventForm.addEventListener("submit", addEvent);
 
 
-//Listeners
-//event listener for delete button
-//event listener for form submit
-
-
-
-
+//Functions
 async function getEvents(){
     try {
         let response = await fetch(API_URL);
@@ -55,24 +52,27 @@ async function getEvents(){
 }
 
 
-
-
 async function renderEvents(){
     eventList.replaceChildren();
     await getEvents();
     for( evt of state.events) {
+        let deleteBtn = document.createElement("button");
         let li = document.createElement("li");
+        deleteBtn.innerText = "Delete";
+        deleteBtn.setAttribute("class", "delete-btn");
+        deleteBtn.setAttribute("id", `${evt.id}`);
         li.innerText = `${evt.name.toUpperCase()}, ${new Date(evt.date).toUTCString()}, ${evt.location}, ${evt.description}`;
+        li.appendChild(deleteBtn);
         eventList.appendChild(li);
     }
 }
 
 
-
+//TODO: add date and time
 
 async function addEvent(ev){
     ev.preventDefault();
-    console.log(addEventForm.date.value)
+    
     try {
         let response = await fetch(API_URL, {
             method: "POST",
@@ -86,15 +86,41 @@ async function addEvent(ev){
             })
             
         });
-        console.log(response.status, response.statusText)
+        // console.log(response.status, response.statusText)
         renderEvents();
+        addEventForm.reset();
+
     } catch (err){
         alert(err.message);
     }
     
 }
 
+
+async function deleteEvent(eventId) {
+    try {
+        let deleteUrl = API_URL + "/" + eventId;
+        let response = await fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }
+        )
+        renderEvents();
+    } catch(err) {
+        alert(err.message);
+    }
+}
+
+
 renderEvents();
+//event listener for delete buttons
+eventList.addEventListener("click", async (ev) => {
+        if(ev.target.tagName === 'BUTTON') {
+            await deleteEvent(ev.target.id);
+        }
+    })
 
 
 
