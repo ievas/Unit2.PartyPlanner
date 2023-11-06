@@ -38,7 +38,7 @@ let addEventForm = document.querySelector("form");
 //Listeners
 //event listener for delete button
 //event listener for form submit
-// addEventForm.addEventListener("submit", addEvent);
+
 
 
 
@@ -57,20 +57,46 @@ async function getEvents(){
 
 
 async function renderEvents(){
+    eventList.replaceChildren();
     await getEvents();
     for( evt of state.events) {
         let li = document.createElement("li");
-        li.innerText = `${evt.name}, ${new Date(evt.date).toUTCString()}, ${evt.location}, ${evt.description}`;
+        li.innerText = `${evt.name.toUpperCase()}, ${new Date(evt.date).toUTCString()}, ${evt.location}, ${evt.description}`;
         eventList.appendChild(li);
     }
 }
 
+
+
+
+async function addEvent(ev){
+    ev.preventDefault();
+    try {
+        let response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: addEventForm.name.value,
+                date: addEventForm.date.value,
+                location: addEventForm.location.value,
+                description: addEventForm.description.value,
+                cohortId: 16
+            })
+            
+        });
+        console.log(response.status, response.statusText)
+        await renderEvents();
+    } catch (err){
+        alert(err.message);
+    }
+    
+}
+
 renderEvents();
 
+addEventForm.addEventListener("submit", addEvent);
 
-// async function addEvent(){
-//     await renderEvents();
-// }
+
 
 
 
