@@ -24,10 +24,6 @@
 
 const API_URL = `https://fsa-crud-2aa9294fe819.herokuapp.com/api/2308-acc-et-web-pt-a/events`;
 
-//render everything from the events endpoint always?
-//References
-let 
-
 //state with data from API
 
 let state = {
@@ -35,8 +31,42 @@ let state = {
 }
 
 
+
+async function getEvents(){
+    try {
+        let response = await fetch(API_URL);
+        let obj = await response.json();
+        state.events = obj.data;
+        console.log(state.events)
+    } catch (err){
+        alert(err.message);
+    }
+}
+
+getEvents();
+
+
+// async function renderEvents(){
+
+// }
+
+//References
+let eventList = document.getElementById("event-list")
+let addEventForm = document.querySelector("form");
+
+//Listeners
 //event listener for delete button
 //event listener for form submit
+addEventForm.addEventListener("submit", addEvent);
+
+function addEvent(){
+
+}
+
+
+
+
+
 
 
 
